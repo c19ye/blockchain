@@ -1,0 +1,23 @@
+{
+  "name": "Monster Notebook",
+  "imageUrl": "https://www.monsternotebook.com.tr/UPLOAD/urun-gorselleri-yeni/TULPAR/T7-V24-1/thumb/Tulpar-T7-V24.1%20Ekran_medium.png",
+  "shadowUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKHi39T0pR06AgBBp9l1cHj_cc7dhCduekEYVjvKONQRV7Yz9fqf2X2v4Y6avkubduyn4&usqp=CAU",
+  "stock": 5,
+  "price": 15000
+}
+
+{
+  "name": "IPhone 11",
+  "imageUrl": "https://cdn.dsmcdn.com/mnresize/500/-/ty199/product/media/images/20211014/16/147821318/111694402/1/1_org.jpg",
+  "shadowUrl": "https://m.media-amazon.com/images/I/71iO2R+CLjL._AC_UF1000,1000_QL80_.jpg",
+  "stock": 10,
+  "price": 10000
+}
+
+{
+  "name": "Casper Monitör 21.5 Inc",
+  "imageUrl": "https://www.casper.com.tr/uploads/2022/06/215-cspe215-c215f-monitor-3-9_op.webp",
+  "shadowUrl": "https://akn-ayb.a-cdn.akinoncdn.com/products/2023/02/06/2290338/e917f624-4342-455f-b297-328f2942ffbf_size780x780_quality60_cropCenter.jpg",
+  "stock": 7,
+  "price": 7000
+}
