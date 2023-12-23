@@ -7,9 +7,7 @@ dotnet run
 https://localhost:7174/
 
 # React
-Visual Studio Code
-
-Terminal
+cmd dosya yolu
 
 npm install
 
