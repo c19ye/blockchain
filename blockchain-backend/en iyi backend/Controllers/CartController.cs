@@ -7,6 +7,12 @@ using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Threading.Tasks;
+using Nethereum.Web3;
+using Nethereum.Web3.Accounts.Managed;
+using Nethereum.Contracts;
+using Nethereum.Hex.HexTypes;
+
 
 namespace en_iyi_backend.Controllers
 {
@@ -36,7 +42,8 @@ namespace en_iyi_backend.Controllers
                 // Pin the serialized Cart object to IPFS via Pinata
                 HttpResponseMessage pinCartResponse = await httpClient.PostAsync("https://api.pinata.cloud/pinning/pinJSONToIPFS", cartContent);
                 string pinCartContent = await pinCartResponse.Content.ReadAsStringAsync();
-                Console.WriteLine(pinCartContent);
+               Console.WriteLine ( pinCartContent);
+               
 
                 //// Read file
                 //byte[] fileBytes = await System.IO.File.ReadAllBytesAsync("./ethereum.jpg");
@@ -47,10 +54,10 @@ namespace en_iyi_backend.Controllers
                 string testContent = await testResponse.Content.ReadAsStringAsync();
                 Console.WriteLine(testContent);
 
-               
+                Web3(pinCartContent);
 
                 // Define NFT Metadata
-                var nftMetadata = new
+                /*var nftMetadata = new
                 {
                     name = "Our NFT",
                     description = "Our very first NFT.",
@@ -63,7 +70,7 @@ namespace en_iyi_backend.Controllers
                 // Upload NFT Metadata to IPFS via Pinata
                 HttpResponseMessage pinNFTResponse = await httpClient.PostAsync("https://api.pinata.cloud/pinning/pinJSONToIPFS", nftContent);
                 string pinNFTContent = await pinNFTResponse.Content.ReadAsStringAsync();
-                Console.WriteLine(pinNFTContent);
+                Console.WriteLine(pinNFTContent); */
 
                 // Add cart to database
                 _datacontext.Carts.Add(cart);
@@ -72,7 +79,40 @@ namespace en_iyi_backend.Controllers
                 return new JsonResult(Ok(cart));
             }
         }
+        public async void Web3(string pinContent)
+        {
+            string mnemonic = "luxury,cable,fog,govern,wealth,amazing,window,diary,sample,trophhy,veteran,bulk";
+            string infuraurl = "https://sepolia.infura.io/v3/6c2806217b0d45f1a5d48756c50debb3";
 
+            var account = new ManagedAccount(mnemonic,infuraurl);
+            var web3 = new Web3(account);
+
+            var accounts = await web3.Eth.Accounts.SendRequestAsync();
+            Console.WriteLine("accounts: " + string.Join(", ", accounts));
+
+            var balance = await web3.Eth.GetBalance.SendRequestAsync(accounts[0]);
+            Console.WriteLine("balance: " + balance);
+
+            var contractaddress = "0xB9Ad7E136766de4ECd136bff52fF0fA1b1D58784";
+            var contractabi = "[\r\n\t{\r\n\t\t\"inputs\": [],\r\n\t\t\"name\": \"getstore\",\r\n\t\t\"outputs\": [\r\n\t\t\t{\r\n\t\t\t\t\"internalType\": \"string\",\r\n\t\t\t\t\"name\": \"\",\r\n\t\t\t\t\"type\": \"string\"\r\n\t\t\t}\r\n\t\t],\r\n\t\t\"stateMutability\": \"view\",\r\n\t\t\"type\": \"function\"\r\n\t},\r\n\t{\r\n\t\t\"inputs\": [\r\n\t\t\t{\r\n\t\t\t\t\"internalType\": \"string\",\r\n\t\t\t\t\"name\": \"_store\",\r\n\t\t\t\t\"type\": \"string\"\r\n\t\t\t}\r\n\t\t],\r\n\t\t\"name\": \"setstore\",\r\n\t\t\"outputs\": [],\r\n\t\t\"stateMutability\": \"nonpayable\",\r\n\t\t\"type\": \"function\"\r\n\t},\r\n\t{\r\n\t\t\"inputs\": [],\r\n\t\t\"name\": \"store\",\r\n\t\t\"outputs\": [\r\n\t\t\t{\r\n\t\t\t\t\"internalType\": \"string\",\r\n\t\t\t\t\"name\": \"\",\r\n\t\t\t\t\"type\": \"string\"\r\n\t\t\t}\r\n\t\t],\r\n\t\t\"stateMutability\": \"view\",\r\n\t\t\"type\": \"function\"\r\n\t}\r\n]";
+            // replace with your contract abı
+            var contract = web3.Eth.GetContract(contractabi, contractaddress);
+
+            var retrievefunction = contract.GetFunction("getstore");
+            var value = await retrievefunction.CallAsync<uint>();
+            Console.WriteLine("retrieved value: " + value);
+
+            var storefunction = contract.GetFunction("store");
+            // var transactionınput = storefunction.CreateTransactionInput(accounts[0], new Hex.HexTypes.HexBigInteger(90000), new Hex.HexTypes.HexBigInteger(0), new Hex.HexTypes.HexBigInteger(4));
+            var transactionInput = contract.GetFunction("setstore")
+            .CreateTransactionInput(accounts[0], pinContent);
+           
+           
+            var transactionhash = await web3.Eth.Transactions.SendTransaction.SendRequestAsync(transactionInput);
+            Console.WriteLine("transaction hash: " + transactionhash);
+
+            Console.WriteLine("done");
+        }
         [HttpGet("GetAll")]
         public JsonResult GetAll()
         {
@@ -81,3 +121,4 @@ namespace en_iyi_backend.Controllers
         }
     }
 }
+
