@@ -12,7 +12,8 @@ using Nethereum.Web3;
 using Nethereum.Web3.Accounts.Managed;
 using Nethereum.Contracts;
 using Nethereum.Hex.HexTypes;
-
+using Nethereum.HdWallet;
+using System.Net;
 
 namespace en_iyi_backend.Controllers
 {
@@ -54,7 +55,7 @@ namespace en_iyi_backend.Controllers
                 string testContent = await testResponse.Content.ReadAsStringAsync();
                 Console.WriteLine(testContent);
 
-                Web3(pinCartContent);
+                //wweb3(pinCartContent);
 
                 // Define NFT Metadata
                 /*var nftMetadata = new
@@ -76,43 +77,103 @@ namespace en_iyi_backend.Controllers
                 _datacontext.Carts.Add(cart);
                 _datacontext.SaveChanges();
 
-                return new JsonResult(Ok(cart));
+                return new JsonResult(pinCartContent);
             }
         }
-        public async void Web3(string pinContent)
-        {
-            string mnemonic = "luxury,cable,fog,govern,wealth,amazing,window,diary,sample,trophhy,veteran,bulk";
-            string infuraurl = "https://sepolia.infura.io/v3/6c2806217b0d45f1a5d48756c50debb3";
+//        public async void wweb3(string pinContent)
+//        {
+//            string mnemonic = "luxury cable fog govern wealth amazing window diary sample trophy veteran bulk";
+//            string infuraurl = "https://sepolia.infura.io/v3/6c2806217b0d45f1a5d48756c50debb3";
 
-            var account = new ManagedAccount(mnemonic,infuraurl);
-            var web3 = new Web3(account);
 
-            var accounts = await web3.Eth.Accounts.SendRequestAsync();
-            Console.WriteLine("accounts: " + string.Join(", ", accounts));
+//            var wallet = new Wallet(mnemonic, "");
 
-            var balance = await web3.Eth.GetBalance.SendRequestAsync(accounts[0]);
-            Console.WriteLine("balance: " + balance);
+//            // İstediğiniz hesap indeksini belirtin
+//            var accountIndex = 0;
 
-            var contractaddress = "0xB9Ad7E136766de4ECd136bff52fF0fA1b1D58784";
-            var contractabi = "[\r\n\t{\r\n\t\t\"inputs\": [],\r\n\t\t\"name\": \"getstore\",\r\n\t\t\"outputs\": [\r\n\t\t\t{\r\n\t\t\t\t\"internalType\": \"string\",\r\n\t\t\t\t\"name\": \"\",\r\n\t\t\t\t\"type\": \"string\"\r\n\t\t\t}\r\n\t\t],\r\n\t\t\"stateMutability\": \"view\",\r\n\t\t\"type\": \"function\"\r\n\t},\r\n\t{\r\n\t\t\"inputs\": [\r\n\t\t\t{\r\n\t\t\t\t\"internalType\": \"string\",\r\n\t\t\t\t\"name\": \"_store\",\r\n\t\t\t\t\"type\": \"string\"\r\n\t\t\t}\r\n\t\t],\r\n\t\t\"name\": \"setstore\",\r\n\t\t\"outputs\": [],\r\n\t\t\"stateMutability\": \"nonpayable\",\r\n\t\t\"type\": \"function\"\r\n\t},\r\n\t{\r\n\t\t\"inputs\": [],\r\n\t\t\"name\": \"store\",\r\n\t\t\"outputs\": [\r\n\t\t\t{\r\n\t\t\t\t\"internalType\": \"string\",\r\n\t\t\t\t\"name\": \"\",\r\n\t\t\t\t\"type\": \"string\"\r\n\t\t\t}\r\n\t\t],\r\n\t\t\"stateMutability\": \"view\",\r\n\t\t\"type\": \"function\"\r\n\t}\r\n]";
-            // replace with your contract abı
-            var contract = web3.Eth.GetContract(contractabi, contractaddress);
+//            // HD cüzdanından hesap adresini alın
+//            var account = wallet.GetAccount(accountIndex);
 
-            var retrievefunction = contract.GetFunction("getstore");
-            var value = await retrievefunction.CallAsync<uint>();
-            Console.WriteLine("retrieved value: " + value);
+//            // Web3'ü başlatın
+//            var web3 = new Web3(account,infuraurl);
 
-            var storefunction = contract.GetFunction("store");
-            // var transactionınput = storefunction.CreateTransactionInput(accounts[0], new Hex.HexTypes.HexBigInteger(90000), new Hex.HexTypes.HexBigInteger(0), new Hex.HexTypes.HexBigInteger(4));
-            var transactionInput = contract.GetFunction("setstore")
-            .CreateTransactionInput(accounts[0], pinContent);
+//            // Create a function to interact with the contract
+
+
+//            var balanceWei = await web3.Eth.GetBalance.SendRequestAsync(account.Address);
+//            var balanceEther = Web3.Convert.FromWei(balanceWei);
+
+//            Console.WriteLine("Balance in Wei: " + balanceWei);
+//            Console.WriteLine("Balance in Ether: " + balanceEther);
+
+//            // Get accounts
+//            //var accounts = await web3.Eth.Accounts.SendRequestAsync();
+//            //Console.WriteLine("Accounts: " + string.Join(", ", accounts));
+
+//            // Get balance of account
            
-           
-            var transactionhash = await web3.Eth.Transactions.SendTransaction.SendRequestAsync(transactionInput);
-            Console.WriteLine("transaction hash: " + transactionhash);
 
-            Console.WriteLine("done");
-        }
+//            var contractaddress = "0xB9Ad7E136766de4ECd136bff52fF0fA1b1D58784";
+//            var contractabi = @"[
+//    {
+//        ""inputs"": [],
+//        ""name"": ""getstore"",
+//        ""outputs"": [
+//            {
+//                ""internalType"": ""string"",
+//                ""name"": """",
+//                ""type"": ""string""
+//            }
+//        ],
+//        ""stateMutability"": ""view"",
+//        ""type"": ""function""
+//    },
+//    {
+//        ""inputs"": [
+//            {
+//                ""internalType"": ""string"",
+//                ""name"": ""_store"",
+//                ""type"": ""string""
+//            }
+//        ],
+//        ""name"": ""setstore"",
+//        ""outputs"": [],
+//        ""stateMutability"": ""nonpayable"",
+//        ""type"": ""function""
+//    },
+//    {
+//        ""inputs"": [],
+//        ""name"": ""store"",
+//        ""outputs"": [
+//            {
+//                ""internalType"": ""string"",
+//                ""name"": """",
+//                ""type"": ""string""
+//            }
+//        ],
+//        ""stateMutability"": ""view"",
+//        ""type"": ""function""
+//    }
+//]";
+//            // replace with your contract abı
+//            var contract = web3.Eth.GetContract(contractabi, contractaddress);
+
+//            var setStoreFunction = contract.GetFunction("setstore");
+//            var transactionInput = setStoreFunction.CreateTransactionInput(account.Address, pinContent);
+
+
+//            //var retrievefunction = contract.GetFunction("getstore");
+//            //var value = await retrievefunction.CallAsync<string>();
+//            //Console.WriteLine("retrieved value: " + value);
+
+//            //var storefunction = contract.GetFunction("store");
+//            //// var transactionınput = storefunction.CreateTransactionInput(accounts[0], new Hex.HexTypes.HexBigInteger(90000), new Hex.HexTypes.HexBigInteger(0), new Hex.HexTypes.HexBigInteger(4));
+
+//            var transactionhash = await web3.Eth.Transactions.SendTransaction.SendRequestAsync(transactionInput);
+//            Console.WriteLine("transaction hash: " + transactionhash);
+
+//            Console.WriteLine("done");
+//        }
         [HttpGet("GetAll")]
         public JsonResult GetAll()
         {
